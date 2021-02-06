@@ -42,9 +42,9 @@ parser.add_argument('-GPU', dest='GPU', type=str, default="0", help='used GPU')
 parser.add_argument('-model_address', dest='model_address', type=str, default='Mean_Filter_ResNet18_3.pkl', help='address of the model')
 parser.add_argument('-basic_ResNet', dest='basic_model', type=str, default='ResNet18', help='the basic ResNet model including ResNet18/ResNet34/ResNet50/ResNet101')
 parser.add_argument('-whether_denoising', dest='whether_denoising', type=int, default=1, help='whether add denoising block into ResNet')
-parser.add_argument('-filter_type', dest='filter_type', type=str, default='Mean_Filter', help='Mean_Filter/Median_Filter/Gaussian_Filter')
+parser.add_argument('-filter_type', dest='filter_type', type=str, default='Gaussian_Filter', help='Mean_Filter/Median_Filter/Gaussian_Filter')
 parser.add_argument('-kernel_size', dest='ksize', type=int, default=3, help='kernel size of the filter')
-parser.add_argument('-epoches', dest='epoches', type=int, default=200, help='epoches')
+parser.add_argument('-epoches', dest='epoches', type=int, default=2, help='epoches')
 parser.add_argument('-perturbation_threshold', dest='threshold', type=float, default=1e-8, help='maximum threshold')
 parser.add_argument('-batch_size', dest='batch_size', type=int, default=64, help='batch_size')
 parser.add_argument('-num_workers', dest='num_workers', type=int, default=32, help='num_workers')
@@ -57,7 +57,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = args.GPU
 
 # Load the model
 model = load_model(basic_model=args.basic_model, whether_denoising=args.whether_denoising, filter_type=args.filter_type, ksize=args.ksize)
-model.load_state_dict(torch.load(args.model_address))
+#model.load_state_dict(torch.load(args.model_address))
 model.cuda()
 model = nn.DataParallel(model)
 
