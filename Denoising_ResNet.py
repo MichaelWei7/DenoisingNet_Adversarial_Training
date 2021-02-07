@@ -145,20 +145,33 @@ def ResNet152(whether_denoising=False, filter_type="Mean_Filter", ksize=3):
     return ResNet(Bottleneck, [3, 8, 36, 3], num_classes=10, whether_denoising=whether_denoising, filter_type=filter_type, ksize=ksize)
 
 def test():
-    from torch.autograd import Variable
-    net = ResNet18(whether_denoising=True, filter_type="Median_Filter", ksize=3)
-    x = Variable(torch.randn(1, 3, 32, 32), requires_grad=True)
+    net = ResNet18(whether_denoising=True, filter_type="Gaussian_Filter", ksize=3)
+    x = torch.randn(16, 3, 32, 32)
     y = net(x)
     print(y)
 
 def denoising_block_test(filter_type):
-    from torch.autograd import Variable
     denoising_block1 = denoising_block(in_planes=32, ksize=3, filter_type=filter_type)
-    x = Variable(torch.ones(2, 64, 32, 32), requires_grad=True)
+    x = torch.ones(2, 64, 32, 32)
     y = denoising_block1(x)
     print(y)
     y.backward(x)
     print(x.grad)
 
-# test()
-# denoising_block_test('Median_Filter')
+
+
+def show_net_meta(net):
+    print("网络结构:")
+    print(net)
+
+    print("参数列表:")
+    for name, param in net.named_parameters():
+        print("---> {}: {}".format(name, list(param.size())))
+
+    print("参数数目:")
+    n_params = sum([p.numel() for p in net.parameters()])
+    print("---> ", n_params)
+
+
+#test()
+denoising_block_test('Median_Filter')
